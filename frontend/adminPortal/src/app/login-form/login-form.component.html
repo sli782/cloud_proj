@@ -1,0 +1,20 @@
+<div class="card">
+  <div class="card-body">
+    <form [formGroup]="angForm" >
+      <div class="form-group">
+        <label class="col-md-4">User Name</label>
+        <input type="text" class="form-control" formControlName="user" />
+      </div>
+      <div class="form-group">
+        <label class="col-md-4"> Password </label>
+        <input type="text" class="form-control" formControlName="password"  />
+      </div>
+      <div class="form-group">
+        <button (click)="checkLogin(angForm.value.user, angForm.value.password)"type="submit" class="btn btn-primary">Log In</button>
+      </div>
+      <div  class="form-group" *ngIf = "passwordCheck">
+       <b>please enter correct user name and password</b>
+      </div>
+    </form>
+  </div>
+</div>
