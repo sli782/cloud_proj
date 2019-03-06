@@ -60,7 +60,7 @@ app.post("/instance", (request, response) => {
 });
 });
 
-app.get("/instance/start/:id", (request, response) => {
+app.post("/instance/start/:id", (request, response) => {
     EventCollection.insertOne({
         VM: VirtualMachineMap[result['ops'][0]['configurationTemplate']],
         CC: result['ops'][0]['user'],
@@ -70,7 +70,7 @@ app.get("/instance/start/:id", (request, response) => {
     })
 });
 
-app.get("/instance/stop/:id", (request, response) => {
+app.post("/instance/stop/:id", (request, response) => {
     EventCollection.insertOne({
         VM: VirtualMachineMap[result['ops'][0]['configurationTemplate']],
         CC: result['ops'][0]['user'],
