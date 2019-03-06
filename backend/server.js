@@ -33,14 +33,26 @@ const port = process.env.PORT || 4000;
 const server = app.listen(port, function(){
     console.log('listening on port ' + port);
 });
-app.post("/instance", (request, response) => {
+/*app.post("/instance", (request, response) => {
     ConsumerCollection.insert(request.body, (error, result) => {
         if(error) {
             return response.status(500).send(error);
         }
         response.send(result.result);
     });
+});*/
+
+app.post("/instance", (request, response) => {
+    InstanceCollection.insert(request.body, (error, result) => {
+    if(error) {
+        return response.status(500).send(error);
+    }
+    response.send(result.result);
 });
+});
+
+
+
 // app.get("/instance/upgrade/:id", (request, response) => {
 //     InstanceCollection.findOneAndUpdate({ "_id": new ObjectId(request.params.id)},{$set: { name: request.name } }, (error, result) =>{
 //         response.send(result);
@@ -147,27 +159,22 @@ app.get("/instance/downgrade/:id", (request, response) => {
     )
 });
 app.get("/instance/delete/:id", (request, response) => {
-    var tm = new virtualMachineModel();
-    var IId;
-    InstanceCollection.findOne({"_id": new ObjectId(request.params.id)}, (error,result) =>{
-         tm = result
-         IId =tm['configurationTemplate'];
-         TemplateCollection.findOne({"_id": new ObjectId(IId)},(err, res) =>{
-         EventCollection.insertOne({
-            VM: request.params.id,
-            CC: "5c77466b1c9d44000074bace",
-            VMType: res['name'],
-            EventType: "Delete",
-            EventTimeStamp: new Date()
+InstanceCollection.findOne({"_id": new ObjectId(request.params.id)}, (error,result) =>{
+    EventCollection.insertOne({
+    VM: request.params.id,
+    CC: "5c77466b1c9d44000074bace",
+    VMType: result['configurationTemplate'],
+    EventType: "Delete",
+    EventTimeStamp: new Date()
 
-         })
-       })
-    })
-    InstanceCollection.deleteOne({"_id": new ObjectId(request.params.id)}, (error, result) =>{
-        if(error){
-          console.log(error)
-        }
-    })
+}),
+InstanceCollection.deleteOne({"_id": new ObjectId(request.params.id)}, (error, result) =>{
+    if(error){
+        console.log(error)
+    }
+})
+})
+
 })
    
 
@@ -180,6 +187,14 @@ app.get("/consumer",(request,response) => {
         }
         response.send(result);
     });
+});
+app.get("/instance",(request,response) => {
+    InstanceCollection.find({}).toArray((error, result) => {
+    if(error) {
+        return response.status(500).send(error);
+    }
+    response.send(result);
+});
 });
 
 
