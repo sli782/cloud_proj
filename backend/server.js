@@ -68,20 +68,22 @@ promise.then(function(va){
 
 
 app.post("/instance/start/:id", (request, response) => {
+  
     EventCollection.insertOne({
         VM: request.params.id,
-        CC: result['ops'][0]['user'],
-        VMType: result['ops'][0]['configurationTemplate'],
+        CC: request.body['user'],
+        VMType: request.body['configurationTemplate'],
         EventType: "Start",
         EventTimeStamp: new Date()
     })
+  
 });
 
 app.post("/instance/stop/:id", (request, response) => {
     EventCollection.insertOne({
         VM: request.params.id,
-        CC: result['ops'][0]['user'],
-        VMType: result['ops'][0]['configurationTemplate'],
+        CC: request.body['user'],
+        VMType: request.body['configurationTemplate'],
         EventType: "Stop",
         EventTimeStamp: new Date()
     })

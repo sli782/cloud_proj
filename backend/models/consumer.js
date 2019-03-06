@@ -2,7 +2,8 @@ var mongoose = require('mongoose');
 var schema = mongoose.Schema;
 var Consumer = new schema({
     name: {type: String},
-    password: {type: String}
+    password: {type: String},
+    charge:{type: Number}
 },{
     collection: 'consumer' 
 }
