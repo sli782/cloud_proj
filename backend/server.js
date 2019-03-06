@@ -41,16 +41,44 @@ const server = app.listen(port, function(){
         response.send(result.result);
     });
 });*/
+var VirtualMachineMap = { 'Basic Virtual Server Instance': '5c7746fb1c9d44000074bacf', 'Large Virtual Server Instance':'5c77482a1c9d44000074bad0', 'Ultra-Large Virtual Server Instance': '5c7748981c9d44000074bad1' };
 
 app.post("/instance", (request, response) => {
     InstanceCollection.insert(request.body, (error, result) => {
     if(error) {
         return response.status(500).send(error);
     }
-    response.send(result.result);
+    EventCollection.insertOne({
+        VM: VirtualMachineMap[result['ops'][0]['configurationTemplate']],
+        CC: result['ops'][0]['user'],
+        VMType: result['ops'][0]['configurationTemplate'],
+        EventType: "Create",
+        EventTimeStamp: new Date()
+    
+    })
+ 
 });
 });
 
+app.get("/instance/start/:id", (request, response) => {
+    EventCollection.insertOne({
+        VM: VirtualMachineMap[result['ops'][0]['configurationTemplate']],
+        CC: result['ops'][0]['user'],
+        VMType: result['ops'][0]['configurationTemplate'],
+        EventType: "Start",
+        EventTimeStamp: new Date()
+    })
+});
+
+app.get("/instance/stop/:id", (request, response) => {
+    EventCollection.insertOne({
+        VM: VirtualMachineMap[result['ops'][0]['configurationTemplate']],
+        CC: result['ops'][0]['user'],
+        VMType: result['ops'][0]['configurationTemplate'],
+        EventType: "Stop",
+        EventTimeStamp: new Date()
+    })
+});
 
 
 // app.get("/instance/upgrade/:id", (request, response) => {
@@ -160,22 +188,31 @@ app.get("/instance/downgrade/:id", (request, response) => {
 });
 app.get("/instance/delete/:id", (request, response) => {
 InstanceCollection.findOne({"_id": new ObjectId(request.params.id)}, (error,result) =>{
+ var promise = createDeleteEvent(request.params.id, result['configurationTemplate'])
+ var promise2 = promise.then(function(){
+    InstanceCollection.deleteOne({"_id": new ObjectId(request.params.id)}, (error, result) =>{
+        if(error){
+            console.log(error)
+        }
+    })
+ })
+
+
+})
+
+})
+
+function createDeleteEvent(id, name){
     EventCollection.insertOne({
-    VM: request.params.id,
-    CC: "5c77466b1c9d44000074bace",
-    VMType: result['configurationTemplate'],
-    EventType: "Delete",
-    EventTimeStamp: new Date()
+        VM: id,
+        CC: "5c77466b1c9d44000074bace",
+        VMType: name,
+        EventType: "Delete",
+        EventTimeStamp: new Date()
+    
+    })
 
-}),
-InstanceCollection.deleteOne({"_id": new ObjectId(request.params.id)}, (error, result) =>{
-    if(error){
-        console.log(error)
-    }
-})
-})
-
-})
+}
    
 
 
