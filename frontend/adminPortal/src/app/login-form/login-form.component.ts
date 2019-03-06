@@ -13,7 +13,7 @@ export class LoginFormComponent implements OnInit {
   UserName ='';
   password ='';
   passwordCheck = false;
-  constructor(private virtualService: VirtualService, private fb: FormBuilder, public router: Router) { 
+  constructor(private virtualService: VirtualService, private fb: FormBuilder, public router: Router) {
     this.createForm();
   }
 
@@ -22,7 +22,7 @@ export class LoginFormComponent implements OnInit {
     this.AllConsumers = res,
     console.log(this.AllConsumers);
    },
-  
+
    )
   }
   createForm() {
@@ -35,6 +35,9 @@ export class LoginFormComponent implements OnInit {
     for(var i=0; i< this.AllConsumers.length; i++){
        if(this.AllConsumers[i]['name']== name && this.AllConsumers[i]['password'] == password)
        {
+
+        this.virtualService.setUserID(this.AllConsumers[i]._id);
+        console.log("hahahahahhaha"+ this.AllConsumers[i]._id);
         this.router.navigate(['main']);
        }
        else{

@@ -1,3 +1,54 @@
-<p>
-  main works!
-</p>
+
+
+
+<mat-card>
+
+  <form (submit)="onAddPost(postForm)" #postForm="ngForm">
+
+      <input   type = "radio" name="title"  ngModel value="Ultra-Large Virtual Server Instance"
+               #title="ngModel" >Ultra-Large Virtual Server Instance<br>
+      <input   type = "radio" name="title"  ngModel value="Large Virtual Server Instance"
+              #title="ngModel" >Large Virtual Server Instance<br>
+      <input   type = "radio" name="title"  ngModel value="Basic Virtual Server Instance"
+              #title="ngModel" >Basic Virtual Server Instance<br>
+     <!-- <mat-error *ngIf="title.invalid">Please enter a post title</mat-error>-->
+
+
+
+    <!--<mat-form-field>
+      <textarea matInput rows = "4" name="content" ngModel required #content="ngModel" placeholder="Post Content"></textarea>
+      <mat-error *ngIf="content.invalid">Please enter a post content</mat-error>
+    </mat-form-field>-->
+
+    <hr>
+    <button mat-raised-button color="accent" type="submit">Create New VM</button>
+  </form>
+</mat-card>
+
+<!--<mat-card>
+<div class="container">
+  <div class ="row" *ngFor="let InstanceCollection of InstanceCollections">
+    <div class="col-lg-6 col-xs-6">
+      <p>{{InstanceCollection.configurationTemplate}}</p>
+    </div>
+    <div class="col-lg-6 col-xs-6">
+      <button mat-button color="warn" >DELETE</button>
+    </div>
+  </div>
+</div>
+
+</mat-card>-->
+
+<mat-accordion multi="true" >
+  <mat-expansion-panel *ngFor="let InstanceCollection of InstanceCollections">
+    <mat-expansion-panel-header>
+      {{InstanceCollection.configurationTemplate}}
+    </mat-expansion-panel-header>
+    <mat-action-row>
+      <button mat-button color="warn" (click)="onDelete(InstanceCollection._id)">DELETE</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+
+
+</mat-accordion>
+<p class="info-text mat-body-1" *ngIf="InstanceCollections.length<1"> no posts added yet!</p>
