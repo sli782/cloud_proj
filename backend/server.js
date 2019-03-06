@@ -41,28 +41,35 @@ const server = app.listen(port, function(){
         response.send(result.result);
     });
 });*/
-var VirtualMachineMap = { 'Basic Virtual Server Instance': '5c7746fb1c9d44000074bacf', 'Large Virtual Server Instance':'5c77482a1c9d44000074bad0', 'Ultra-Large Virtual Server Instance': '5c7748981c9d44000074bad1' };
+// var VirtualMachineMap = { 'Basic Virtual Server Instance': '5c7746fb1c9d44000074bacf', 'Large Virtual Server Instance':'5c77482a1c9d44000074bad0', 'Ultra-Large Virtual Server Instance': '5c7748981c9d44000074bad1' };
 
 app.post("/instance", (request, response) => {
+var promise = new Promise(function(res, rej){
     InstanceCollection.insert(request.body, (error, result) => {
-    if(error) {
-        return response.status(500).send(error);
-    }
+        if(error) {
+            return response.status(500).send(error);
+        }
+        res()
+    });
+})
+promise.then(function(va){
     EventCollection.insertOne({
-        VM: VirtualMachineMap[result['ops'][0]['configurationTemplate']],
-        CC: result['ops'][0]['user'],
-        VMType: result['ops'][0]['configurationTemplate'],
+        VM: request.body['_id'],
+        CC: request.body['user'],
+        VMType: request.body['configurationTemplate'],
         EventType: "Create",
         EventTimeStamp: new Date()
     
     })
- 
+})
 });
-});
+
+
+
 
 app.post("/instance/start/:id", (request, response) => {
     EventCollection.insertOne({
-        VM: VirtualMachineMap[result['ops'][0]['configurationTemplate']],
+        VM: request.params.id,
         CC: result['ops'][0]['user'],
         VMType: result['ops'][0]['configurationTemplate'],
         EventType: "Start",
@@ -72,7 +79,7 @@ app.post("/instance/start/:id", (request, response) => {
 
 app.post("/instance/stop/:id", (request, response) => {
     EventCollection.insertOne({
-        VM: VirtualMachineMap[result['ops'][0]['configurationTemplate']],
+        VM: request.params.id,
         CC: result['ops'][0]['user'],
         VMType: result['ops'][0]['configurationTemplate'],
         EventType: "Stop",
@@ -188,8 +195,11 @@ app.get("/instance/downgrade/:id", (request, response) => {
 });
 app.get("/instance/delete/:id", (request, response) => {
 InstanceCollection.findOne({"_id": new ObjectId(request.params.id)}, (error,result) =>{
- var promise = createDeleteEvent(request.params.id, result['configurationTemplate'])
- var promise2 = promise.then(function(){
+ var promise1 = new Promise(function(res, rej){
+    createDeleteEvent(request.params.id, result['configurationTemplate']),
+    res()
+ })
+ promise1.then(function(va){
     InstanceCollection.deleteOne({"_id": new ObjectId(request.params.id)}, (error, result) =>{
         if(error){
             console.log(error)
