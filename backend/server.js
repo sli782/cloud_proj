@@ -41,8 +41,8 @@ const server = app.listen(port, function(){
         response.send(result.result);
     });
 });*/
-// var VirtualMachineMap = { 'Basic Virtual Server Instance': '5c7746fb1c9d44000074bacf', 'Large Virtual Server Instance':'5c77482a1c9d44000074bad0', 'Ultra-Large Virtual Server Instance': '5c7748981c9d44000074bad1' };
-
+ var VirtualMachineMap = { 'Basic Virtual Server Instance': '5c7746fb1c9d44000074bacf', 'Large Virtual Server Instance':'5c77482a1c9d44000074bad0', 'Ultra-Large Virtual Server Instance': '5c7748981c9d44000074bad1' };
+ var VirtualMachineValueMap = { 'Basic Virtual Server Instance': 5, 'Large Virtual Server Instance': 10, 'Ultra-Large Virtual Server Instance': 15 };
 app.post("/instance", (request, response) => {
 var promise = new Promise(function(res, rej){
     InstanceCollection.insert(request.body, (error, result) => {
@@ -104,6 +104,26 @@ promise.then(function(va){
 });
 
 app.post("/instance/stop/:id", (request, response) => {
+var promise = new Promise(function(res, rej){
+    InstanceCollection.findOne({ "_id": new ObjectId(request.params.id)}, (error, result) =>{
+        InstanceCollection.updateOne(
+               { "_id": new ObjectId(request.params.id)},
+               { $set: {lastEvent: result['currentEvent'], lastTimeStamp: result['currentTimeStamp'], currentEvent: "Stop", currentTimeStamp: new Date(), start: true, stop: false  } }
+        );
+        var TimeDifference = result['currentTimeStamp']-result['lastTimeStamp']; // Calculate the time difference 
+        var minuteDifference = Math.ceil(TimeDifference/(1000*60));
+        var AllMoney = minuteDifference * VirtualMachineValueMap[result['configurationTemplate']];
+        ConsumerCollection.findOne({"_id": new ObjectId(request.body['user'])}, (err, res)=>{ 
+            var currentCharge = res['charge'] + AllMoney;
+            ConsumerCollection.updateOne(
+                { "_id": new ObjectId(request.body['user'])},
+                 { $set: {charge: currentCharge}}
+            )
+        })
+        res()
+    })
+})
+promise.then(function(va){
     EventCollection.insertOne({
         VM: request.params.id,
         CC: request.body['user'],
@@ -111,6 +131,7 @@ app.post("/instance/stop/:id", (request, response) => {
         EventType: "Stop",
         EventTimeStamp: new Date()
     })
+})
 });
 
 
