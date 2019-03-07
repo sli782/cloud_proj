@@ -1,5 +1,9 @@
 
+<mat-toolbar color="primary">
+  <span>  <a routerLink="/"> Wind Computing</a></span>
+  <span class="spacer"></span>
 
+</mat-toolbar>
 
 <mat-card>
 
@@ -21,7 +25,7 @@
     </mat-form-field>-->
 
     <hr>
-    <button mat-raised-button color="accent" type="submit">Create New VM</button>
+    <button mat-raised-button color="primary" type="submit">Create New VM</button>
   </form>
 </mat-card>
 
@@ -38,17 +42,49 @@
 </div>
 
 </mat-card>-->
-
-<mat-accordion multi="true" >
+<mat-card class="paddings">
+<mat-accordion multi="true">
   <mat-expansion-panel *ngFor="let InstanceCollection of InstanceCollections">
-    <mat-expansion-panel-header>
+
+    <mat-expansion-panel-header >
       {{InstanceCollection.configurationTemplate}}
+      <hr>
+      <button mat-button color="primary" (click)="onStart(InstanceCollection._id,InstanceCollection.configurationTemplate)"
+      [disabled]="!InstanceCollection.start">START</button>
+      <button mat-button color="warn" (click)="onStop(InstanceCollection._id,InstanceCollection.configurationTemplate)"
+              [disabled]="!InstanceCollection.stop">STOP</button>
+
     </mat-expansion-panel-header>
     <mat-action-row>
+
+      <button mat-button color="warn" (click)="onUpgrade(InstanceCollection._id)">UPGRADE</button>
+      <button mat-button color="warn" (click)="onDowngrade(InstanceCollection._id)">DOWNGRADE</button>
       <button mat-button color="warn" (click)="onDelete(InstanceCollection._id)">DELETE</button>
     </mat-action-row>
+
   </mat-expansion-panel>
 
 
 </mat-accordion>
+</mat-card>
 <p class="info-text mat-body-1" *ngIf="InstanceCollections.length<1"> no posts added yet!</p>
+
+
+
+<mat-card class="centered">
+
+          Get Your Total Charge
+          <hr>
+          <button style="float:;" mat-button color="primary" (click)="onCharge()">Total Charge</button>
+
+          <br>
+
+          <p class="Word">CAD: {{totalCharge}}</p>
+
+
+
+</mat-card>
+
+
+
+
