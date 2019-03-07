@@ -50,6 +50,7 @@ var promise = new Promise(function(res, rej){
             return response.status(500).send(error);
         }
         res()
+       // EventCollection.remove({})   keep sometime to remove all the documents in event collection, testing creating too many
     });
 })
 promise.then(function(va){
@@ -68,7 +69,27 @@ promise.then(function(va){
 
 
 app.post("/instance/start/:id", (request, response) => {
-  
+var promise = new Promise(function(res, rej){
+ InstanceCollection.findOne({ "_id": new ObjectId(request.params.id)}, (error, result) =>{
+     var check = result['currentEvent'];
+     if(check == null)
+     {
+     InstanceCollection.updateOne(
+        { "_id": new ObjectId(request.params.id)},
+        { $set: {lastEvent: null, lastTimeStamp: null, currentEvent: "Start", currentTimeStamp: new Date(), start: false, stop: true  } }
+     )
+     }
+     else{
+     InstanceCollection.updateOne(
+            { "_id": new ObjectId(request.params.id)},
+            { $set: {lastEvent: result['currentEvent'], lastTimeStamp: result['currentTimeStamp'], currentEvent: "Start", currentTimeStamp: new Date(), start: false, stop: true  } }
+     )
+     }
+     res()
+ })
+
+})
+promise.then(function(va){
     EventCollection.insertOne({
         VM: request.params.id,
         CC: request.body['user'],
@@ -76,6 +97,9 @@ app.post("/instance/start/:id", (request, response) => {
         EventType: "Start",
         EventTimeStamp: new Date()
     })
+
+})
+    
   
 });
 

@@ -8,7 +8,7 @@ var VirtualMachine = new schema({
     lastTimeStamp: {type: Date, defualt: Date.now},
     currentEvent: {type: String},
     currentTimeStamp: {type: Date, default: Date.now},
-    strat: {type: Boolean},
+    start: {type: Boolean},
     stop: {type: Boolean}
 },{
     collection: 'virtualmachine' 
