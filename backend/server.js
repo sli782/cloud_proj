@@ -147,7 +147,7 @@ promise.then(function(va){
 // });
 // Update Instance for the configuration template 
 app.get("/instance/upgrade/:id", (request, response) => {
-    var vmtype;
+    var AllMoney;
     InstanceCollection.findOne({ "_id": new ObjectId(request.params.id)}, (error, result) =>{
             if(result['configurationTemplate'] == "Basic Virtual Server Instance")
             { 
@@ -169,96 +169,211 @@ app.get("/instance/upgrade/:id", (request, response) => {
                     EventType: "Upgrade",
                     EventTimeStamp: new Date()
                 });
-                var TimeDifference = result['currentTimeStamp']-result['lastTimeStamp']; // Calculate the time difference 
-                var minuteDifference = Math.ceil(TimeDifference/(1000*60));
-                var AllMoney = minuteDifference * VirtualMachineValueMap[result['configurationTemplate']];
-                ConsumerCollection.findOne({"_id": new ObjectId(result['user'])}, (err, res)=>{ 
-                    var currentCharge = res['charge'] + AllMoney;
-                    ConsumerCollection.updateOne(
-                        { "_id": new ObjectId(result['user'])},
-                         { $set: {charge: currentCharge}}
-                    )
+                var promise = new Promise(function(res, rej){
+                    var TimeDifference = result['currentTimeStamp']-result['lastTimeStamp']; // Calculate the time difference 
+                    var minuteDifference = Math.ceil(TimeDifference/(1000*60));
+                    AllMoney = minuteDifference * VirtualMachineValueMap[result['configurationTemplate']];
+                    res();
                 })
-
+                promise.then(function(va){
+                    ConsumerCollection.findOne({"_id": new ObjectId(result['user'])}, (err, res)=>{ 
+                        var currentCharge = res['charge'] + AllMoney;
+                        ConsumerCollection.updateOne(
+                            { "_id": new ObjectId(result['user'])},
+                             { $set: {charge: currentCharge}}
+                        )
+                    })
+                })
             }
 
             if(result['configurationTemplate'] == "Large Virtual Server Instance")
             {
+                var check = result['currentEvent'];
+                if(check == null){
                 InstanceCollection.updateOne(
                     { "_id": new ObjectId(request.params.id)},
-                    { $set: { "configurationTemplate" : "Ultra-Large Virtual Server Instance"}}
-                ),
+                    { $set: { lastEvent: null, lastTimeStamp: null, currentEvent: "Scaled", currentTimeStamp: new Date(), start: false, stop: true, "configurationTemplate" : "Ultra-Large Virtual Server Instance"}}
+                )}
+                else {
+                InstanceCollection.updateOne(
+                    { "_id": new ObjectId(request.params.id)},
+                    { $set: { lastEvent: result['currentEvent'], lastTimeStamp: result['currentTimeStamp'], currentEvent: "Scaled", currentTimeStamp: new Date(), start: false, stop: true ,"configurationTemplate" : "Ultra-Large Virtual Server Instance"}}
+                )};
                 EventCollection.insertOne({
                     VM: request.params.id,
-                    CC: "5c77466b1c9d44000074bace",
-                    VMType: "Ultra-large",
+                    CC: result['user'],
+                    VMType: "Ultra-Large",
                     EventType: "Upgrade",
                     EventTimeStamp: new Date()
+                });
+                var promise = new Promise(function(res, rej){
+                    var TimeDifference = result['currentTimeStamp']-result['lastTimeStamp']; // Calculate the time difference 
+                    var minuteDifference = Math.ceil(TimeDifference/(1000*60));
+                    AllMoney = minuteDifference * VirtualMachineValueMap[result['configurationTemplate']];
+                    res();
+                })
+                promise.then(function(va){
+                    ConsumerCollection.findOne({"_id": new ObjectId(result['user'])}, (err, res)=>{ 
+                        var currentCharge = res['charge'] + AllMoney;
+                        ConsumerCollection.updateOne(
+                            { "_id": new ObjectId(result['user'])},
+                             { $set: {charge: currentCharge}}
+                        )
+                    })
                 })
             }
             if(result['configurationTemplate'] == "Ultra-Large Virtual Server Instance")
             {
+                var check = result['currentEvent'];
+                if(check == null){
                 InstanceCollection.updateOne(
                     { "_id": new ObjectId(request.params.id)},
-                    { $set: { "configurationTemplate" : "Ultra-Large Virtual Server Instance"}}
-                ),
+                    { $set: { lastEvent: null, lastTimeStamp: null, currentEvent: "Scaled", currentTimeStamp: new Date(), start: false, stop: true, "configurationTemplate" : "Ultra-Large Virtual Server Instance"}}
+                )}
+                else {
+                InstanceCollection.updateOne(
+                    { "_id": new ObjectId(request.params.id)},
+                    { $set: { lastEvent: result['currentEvent'], lastTimeStamp: result['currentTimeStamp'], currentEvent: "Scaled", currentTimeStamp: new Date(), start: false, stop: true ,"configurationTemplate" : "Ultra-Large Virtual Server Instance"}}
+                )};
                 EventCollection.insertOne({
                     VM: request.params.id,
-                    CC: "5c77466b1c9d44000074bace",
-                    VMType: "Ultra-large",
+                    CC: result['user'],
+                    VMType: "Ultra-Large",
                     EventType: "Upgrade",
                     EventTimeStamp: new Date()
+                });
+                var promise = new Promise(function(res, rej){
+                    var TimeDifference = result['currentTimeStamp']-result['lastTimeStamp']; // Calculate the time difference 
+                    var minuteDifference = Math.ceil(TimeDifference/(1000*60));
+                    AllMoney = minuteDifference * VirtualMachineValueMap[result['configurationTemplate']];
+                    res();
+                })
+                promise.then(function(va){
+                    ConsumerCollection.findOne({"_id": new ObjectId(result['user'])}, (err, res)=>{ 
+                        var currentCharge = res['charge'] + AllMoney;
+                        ConsumerCollection.updateOne(
+                            { "_id": new ObjectId(result['user'])},
+                             { $set: {charge: currentCharge}}
+                        )
+                    })
                 })
             } 
         }
     )
 });
 app.get("/instance/downgrade/:id", (request, response) => {
-    var vmtype;
+    var AllMoney;
     InstanceCollection.findOne({ "_id": new ObjectId(request.params.id)}, (error, result) =>{
             if(result['configurationTemplate'] == "Basic Virtual Server Instance")
             {
+                var check = result['currentEvent'];
+                if(check == null){
                 InstanceCollection.updateOne(
                     { "_id": new ObjectId(request.params.id)},
-                    { $set: { "configurationTemplate" : "Basic Virtual Server Instance"}}
-                ),
+                    { $set: { lastEvent: null, lastTimeStamp: null, currentEvent: "Scaled", currentTimeStamp: new Date(), start: false, stop: true, "configurationTemplate" : "Basic Virtual Server Instance"}}
+                )}
+                else {
+                InstanceCollection.updateOne(
+                    { "_id": new ObjectId(request.params.id)},
+                    { $set: { lastEvent: result['currentEvent'], lastTimeStamp: result['currentTimeStamp'], currentEvent: "Scaled", currentTimeStamp: new Date(), start: false, stop: true ,"configurationTemplate" : "Basic Virtual Server Instance"}}
+                )};
                 EventCollection.insertOne({
                     VM: request.params.id,
-                    CC: "5c77466b1c9d44000074bace",
+                    CC: result['user'],
                     VMType: "Basic",
                     EventType: "Downgrade",
                     EventTimeStamp: new Date()
+                });
+                var promise = new Promise(function(res, rej){
+                    var TimeDifference = result['currentTimeStamp']-result['lastTimeStamp']; // Calculate the time difference 
+                    var minuteDifference = Math.ceil(TimeDifference/(1000*60));
+                    AllMoney = minuteDifference * VirtualMachineValueMap[result['configurationTemplate']];
+                    res();
+                })
+                promise.then(function(va){
+                    ConsumerCollection.findOne({"_id": new ObjectId(result['user'])}, (err, res)=>{ 
+                        var currentCharge = res['charge'] + AllMoney;
+                        ConsumerCollection.updateOne(
+                            { "_id": new ObjectId(result['user'])},
+                             { $set: {charge: currentCharge}}
+                        )
+                    })
                 })
             }
             if(result['configurationTemplate'] == "Large Virtual Server Instance")
             {
+                var check = result['currentEvent'];
+                if(check == null){
                 InstanceCollection.updateOne(
                     { "_id": new ObjectId(request.params.id)},
-                    { $set: { "configurationTemplate" : "Basic Virtual Server Instance"}}
-                )
+                    { $set: { lastEvent: null, lastTimeStamp: null, currentEvent: "Scaled", currentTimeStamp: new Date(), start: false, stop: true, "configurationTemplate" : "Basic Virtual Server Instance"}}
+                )}
+                else {
+                InstanceCollection.updateOne(
+                    { "_id": new ObjectId(request.params.id)},
+                    { $set: { lastEvent: result['currentEvent'], lastTimeStamp: result['currentTimeStamp'], currentEvent: "Scaled", currentTimeStamp: new Date(), start: false, stop: true ,"configurationTemplate" : "Basic Virtual Server Instance"}}
+                )};
                 EventCollection.insertOne({
                     VM: request.params.id,
-                    CC: "5c77466b1c9d44000074bace",
+                    CC: result['user'],
                     VMType: "Basic",
                     EventType: "Downgrade",
                     EventTimeStamp: new Date()
+                });
+                var promise = new Promise(function(res, rej){
+                    var TimeDifference = result['currentTimeStamp']-result['lastTimeStamp']; // Calculate the time difference 
+                    var minuteDifference = Math.ceil(TimeDifference/(1000*60));
+                    AllMoney = minuteDifference * VirtualMachineValueMap[result['configurationTemplate']];
+                    res();
+                })
+                promise.then(function(va){
+                    ConsumerCollection.findOne({"_id": new ObjectId(result['user'])}, (err, res)=>{ 
+                        var currentCharge = res['charge'] + AllMoney;
+                        ConsumerCollection.updateOne(
+                            { "_id": new ObjectId(result['user'])},
+                             { $set: {charge: currentCharge}}
+                        )
+                    })
                 })
             }
             if(result['configurationTemplate'] == "Ultra-Large Virtual Server Instance")
             {
+                var check = result['currentEvent'];
+                if(check == null){
                 InstanceCollection.updateOne(
                     { "_id": new ObjectId(request.params.id)},
-                    { $set: { "configurationTemplate" : "Large Virtual Server Instance"}}
-                ),
+                    { $set: { lastEvent: null, lastTimeStamp: null, currentEvent: "Scaled", currentTimeStamp: new Date(), start: false, stop: true, "configurationTemplate" : "Large Virtual Server Instance"}}
+                )}
+                else {
+                InstanceCollection.updateOne(
+                    { "_id": new ObjectId(request.params.id)},
+                    { $set: { lastEvent: result['currentEvent'], lastTimeStamp: result['currentTimeStamp'], currentEvent: "Scaled", currentTimeStamp: new Date(), start: false, stop: true ,"configurationTemplate" : "Large Virtual Server Instance"}}
+                )};
                 EventCollection.insertOne({
                     VM: request.params.id,
-                    CC: "5c77466b1c9d44000074bace",
+                    CC: result['user'],
                     VMType: "Large",
                     EventType: "Downgrade",
                     EventTimeStamp: new Date()
+                });
+                var promise = new Promise(function(res, rej){
+                    var TimeDifference = result['currentTimeStamp']-result['lastTimeStamp']; // Calculate the time difference 
+                    var minuteDifference = Math.ceil(TimeDifference/(1000*60));
+                    AllMoney = minuteDifference * VirtualMachineValueMap[result['configurationTemplate']];
+                    res();
                 })
+                promise.then(function(va){
+                    ConsumerCollection.findOne({"_id": new ObjectId(result['user'])}, (err, res)=>{ 
+                        var currentCharge = res['charge'] + AllMoney;
+                        ConsumerCollection.updateOne(
+                            { "_id": new ObjectId(result['user'])},
+                             { $set: {charge: currentCharge}}
+                        )
+                    })
+                })
+                }
             } 
-        }
+        
     )
 });
 app.get("/instance/delete/:id", (request, response) => {
@@ -291,10 +406,6 @@ function createDeleteEvent(id, name){
     })
 
 }
-   
-
-
-
 app.get("/consumer",(request,response) => {
     ConsumerCollection.find({}).toArray((error, result) => {
         if(error) {
