@@ -115,8 +115,8 @@ var promise = new Promise(function(res, rej){
     var promise2 = new Promise(function(resv,rejv){
 
         var TimeDifference = result['currentTimeStamp']-result['lastTimeStamp']; // Calculate the time difference
-        var minuteDifference = Math.ceil(TimeDifference/(1000*60));
-     console.log(TimeDifference);
+        var minuteDifference =Math.round(((TimeDifference % 86400000) % 3600000) / 60000);
+     console.log(minuteDifference);
         AllMoney = minuteDifference * VirtualMachineValueMap[result['configurationTemplate']];
         resv();
 

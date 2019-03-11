@@ -8,9 +8,9 @@ export class VirtualService {
 private usersUpdated=new Subject();
 private userID:string;
 InstanceCollections:any = [];
-  ConsumerURL = "http://localhost:4000/consumer";
-  TemplateURL = "http://localhost:4000/template";
-  InstanceURL = "http://localhost:4000/instance";
+  ConsumerURL = "http://3.80.181.39:4000/consumer";
+  TemplateURL = "http://3.80.181.39:4000/template";
+  InstanceURL = "http://3.80.181.39:4000/instance";
 
 
 
@@ -43,7 +43,7 @@ InstanceCollections:any = [];
     const vmType=virtualType;
     const ID=id;
     const newVM={user:ID,configurationTemplate:vmType,start:true,stop:false,currentEvent:null};
-    this.http.post<{result:any}>('http://localhost:3000/instance',newVM)
+    this.http.post<{result:any}>('http://3.80.181.39:4000/instance',newVM)
       .subscribe((responseData)=>{
         console.log("service.addPost works fine");
         this.InstanceCollections.push(newVM);
@@ -59,7 +59,7 @@ setUserID(uID:string){
 
 }
   getPosts(){
-    this.http.get('http://localhost:3000/instance')
+    this.http.get('http://3.80.181.39:4000/instance')
       .subscribe(res =>{
         this.InstanceCollections =res;
         console.log("service.getPost works fine");
@@ -72,7 +72,7 @@ setUserID(uID:string){
  startVM(vmID:string, templateType:string){
     console.log(this.userID);
     const newStart={user:this.userID,configurationTemplate:templateType};
-    this.http.post("http://localhost:3000/instance/start/"+ vmID,newStart)
+    this.http.post("http://3.80.181.39:4000/instance/start/"+ vmID,newStart)
       .subscribe((responseData)=>{
         console.log("service.startVM works fine");
         this.getPosts();
@@ -82,7 +82,7 @@ setUserID(uID:string){
 }
  stopVM(vmID:string,templateType:string){
     const newStop={user:this.userID, configurationTemplate:templateType};
-   this.http.post("http://localhost:3000/instance/stop/"+ vmID,newStop)
+   this.http.post("http://3.80.181.39:4000/instance/stop/"+ vmID,newStop)
      .subscribe((responseData)=>{
        console.log("service.stopVM works fine");
        this.getPosts();
@@ -92,7 +92,7 @@ console.log("Stop Request Sent!")
  }
   deletePost(vmID: string) {
 
-    this.http.get("http://localhost:3000/instance/delete/" + vmID)
+    this.http.get("http://3.80.181.39:4000/instance/delete/" + vmID)
       .subscribe(() => {
 
       });
@@ -104,7 +104,7 @@ console.log("Stop Request Sent!")
 
 
   upgradeVM(vmID:string){
-    this.http.get("http://localhost:3000/instance/upgrade/" + vmID)
+    this.http.get("http://3.80.181.39:4000/instance/upgrade/" + vmID)
       .subscribe(() => {
 
       });
@@ -127,7 +127,7 @@ console.log("Stop Request Sent!")
 
   }
   downgradeVM(vmID:string){
-    this.http.get("http://localhost:3000/instance/downgrade/" + vmID)
+    this.http.get("http://3.80.181.39:4000/instance/downgrade/" + vmID)
       .subscribe(() => {
 
       });
