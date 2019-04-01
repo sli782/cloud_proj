@@ -57,7 +57,7 @@ this.virtualService.addPost(form.value.title,this.userID);
         this.userID=this.virtualService.getUserID();
         console.log(this.userID);
         if(this.AllConsumers[i]['_id']==this.userID)
-        {console.log("aaaa");
+        {console.log("Charge on "+this.AllConsumers[i]["name"]);
           this.totalCharge=this.AllConsumers[i]['charge'];
           console.log(this.totalCharge);
         }
