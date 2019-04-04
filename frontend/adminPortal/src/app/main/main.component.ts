@@ -53,16 +53,19 @@ this.virtualService.addPost(form.value.title,this.userID);
       if (entry._id==vmID) {
         var d2 = new Date(entry.lastTimeStamp);
         var d1 = new Date(entry.currentTimeStamp);
-        var seconds = ((d1-d2)/1000);
+        var seconds = (Math.abs(d1.getTime()-d2.getTime())/1000);
         if (seconds>60){
           var minutes=seconds/60;
           var mod=seconds%60;
-          console.log(parseInt(minutes)+" "+parseInt(mod));
-          this.usage=parseInt(minutes).toString()+" min"+parseInt(mod)+" secs";
+          // console.log(parseInt(minutes)+" "+parseInt(mod));
+          // this.usage=parseInt(minutes).toString()+" min"+parseInt(mod)+" secs";
+          console.log(Math.floor(minutes)+" "+Math.floor(mod));
+          this.usage=Math.floor(minutes).toString()+" min"+Math.floor(mod)+" secs";
         }
         else{
           console.log(seconds);
-          this.usage=parseInt(seconds).toString()+" secs";
+          // this.usage=parseInt(seconds).toString()+" secs";
+          this.usage=Math.floor(seconds).toString()+" secs";
         }
         
         
