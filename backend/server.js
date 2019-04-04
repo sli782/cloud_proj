@@ -558,14 +558,27 @@ app.get("/template", (request, response) => {
         response.send(result);
     });
 });
+// app.put("/consumer/:id", (request ,response) => {
+//     ConsumerCollection.updateOne(
+//         { "_id": new ObjectId(request.params.id) },
+//         { $set: { charge: parseInt(request.body['charge'])} }
+//     )
+//     response.send(request.body['charge']);
+
+// });
 app.put("/consumer/:id", (request ,response) => {
-    ConsumerCollection.updateOne(
-        { "_id": new ObjectId(request.params.id) },
-        { $set: { charge: parseInt(request.body['charge'])} }
-    )
-    response.send(request.body['charge']);
+    ConsumerCollection.findOne({ "_id": new ObjectId(request.params.id) }, (err, res) => {
+        var currentCharge = Number(res['charge']) + Number(request.body['charge']);
+        ConsumerCollection.updateOne(
+            { "_id": new ObjectId(request.params.id) },
+            { $set: { charge: currentCharge } }
+        )
+    })
+    response.send('ok');
 
 });
+
+
 app.get("/event", (request, response) => {
     EventCollection.find({}).toArray((error, result) => {
         if (error) {
