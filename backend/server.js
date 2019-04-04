@@ -726,7 +726,7 @@ mongoose.connect(CONNECTION_URL, { useNewUrlParser: true }, (err, database) => {
 
 // });
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 8080;
 const server = app.listen(port, function () {
     console.log('listening on port ' + port);
 });
