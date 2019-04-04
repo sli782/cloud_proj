@@ -62,6 +62,7 @@ setUserID(uID:string){
     this.http.get('http://localhost:4000/instance')
       .subscribe(res =>{
         this.InstanceCollections =res;
+        console.log(res);
         console.log("service.getPost works fine");
         this.usersUpdated.next([...this.InstanceCollections]);
       });
@@ -85,6 +86,7 @@ setUserID(uID:string){
    this.http.post("http://localhost:4000/instance/stop/"+ vmID,newStop)
      .subscribe((responseData)=>{
        console.log("service.stopVM works fine");
+       
        this.getPosts();
 
      });

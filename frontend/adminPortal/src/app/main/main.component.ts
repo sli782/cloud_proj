@@ -14,6 +14,8 @@ private userID;
   startButton:any=[];
   AllConsumers:any=[];
   totalCharge:number=0;
+  usage:string;
+
   constructor(public virtualService:VirtualService) { }
 
 
@@ -42,7 +44,42 @@ this.virtualService.addPost(form.value.title,this.userID);
     this.virtualService.deletePost(vmID);
 /*this.update();*/
   }
+  onUsage(vmID:string){
+    console.log(this.InstanceCollections[0].currentTimeStamp);
+    console.log(this.InstanceCollections[0].lastTimeStamp);
+    
 
+    for(let entry of this.InstanceCollections) {
+      if (entry._id==vmID) {
+        var d2 = new Date(entry.lastTimeStamp);
+        var d1 = new Date(entry.currentTimeStamp);
+        var seconds = ((d1-d2)/1000);
+        if (seconds>60){
+          var minutes=seconds/60;
+          var mod=seconds%60;
+          console.log(parseInt(minutes)+" "+parseInt(mod));
+          this.usage=parseInt(minutes).toString()+" min"+parseInt(mod)+" secs";
+        }
+        else{
+          console.log(seconds);
+          this.usage=parseInt(seconds).toString()+" secs";
+        }
+        
+        
+        // var minutesDifference = Math.floor(difference/1000/60);
+    
+        // difference -= minutesDifference*1000*60
+
+        // var secondsDifference = Math.floor(difference/1000);
+        // console.log(minutesDifference+"*****"+secondsDifference);
+        
+      }
+    }
+    
+    
+
+
+  }
   onUpgrade(vmID:string){
     this.virtualService.upgradeVM(vmID);
   }

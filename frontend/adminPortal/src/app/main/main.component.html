@@ -56,7 +56,9 @@
 
     </mat-expansion-panel-header>
     <mat-action-row>
-
+      <button mat-button color="warn" (click)="onUsage(InstanceCollection._id)">USAGE</button>
+      <div style="padding-top:7px;"> {{usage}}</div>
+      
       <button mat-button color="warn" (click)="onUpgrade(InstanceCollection._id)">UPGRADE</button>
       <button mat-button color="warn" (click)="onDowngrade(InstanceCollection._id)">DOWNGRADE</button>
       <button mat-button color="warn" (click)="onDelete(InstanceCollection._id)">DELETE</button>
