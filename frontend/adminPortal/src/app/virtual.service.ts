@@ -79,6 +79,12 @@ setUserID(uID:string){
         this.getPosts();
 
       });
+      this.http.post("http://localhost:8081/instance/start/"+ vmID,newStart)
+      .subscribe((responseData)=>{
+        console.log("service.startVM works fine");
+        this.getPosts();
+
+      });
    this.getPosts();
 }
  stopVM(vmID:string,templateType:string){
@@ -90,6 +96,19 @@ setUserID(uID:string){
        this.getPosts();
 
      });
+     this.http.post("http://localhost:8081/instance/stop/"+ vmID,newStop)
+     .subscribe((responseData)=>{
+       console.log("service.stopVM works fine");
+       
+       this.getPosts();
+
+     });
+     var money = Math.floor(Math.random() * 15)+5;
+    const newUpgrade = {charge:money};
+    this.http.put("http://localhost:4000/consumer/" + this.userID,newUpgrade)
+      .subscribe((response) => {
+        console.log('okok');
+      });
 console.log("Stop Request Sent!")
  }
   deletePost(vmID: string) {
@@ -98,7 +117,10 @@ console.log("Stop Request Sent!")
       .subscribe(() => {
 
       });
+      this.http.get("http://localhost:8081/instance/delete/" + vmID)
+      .subscribe(() => {
 
+      });
     const updatedVM = this.InstanceCollections.filter(newVM => newVM._id !== vmID);
     this.InstanceCollections = updatedVM;
     this.usersUpdated.next([...this.InstanceCollections]);
@@ -107,6 +129,10 @@ console.log("Stop Request Sent!")
 
   upgradeVM(vmID:string){
     this.http.get("http://localhost:4000/instance/upgrade/" + vmID)
+      .subscribe(() => {
+
+      });
+      this.http.get("http://localhost:8081/instance/upgrade/" + vmID)
       .subscribe(() => {
 
       });
@@ -125,11 +151,21 @@ console.log("Stop Request Sent!")
       }
     }
     this.usersUpdated.next([...this.InstanceCollections]);
-
+    var money = Math.floor(Math.random() * 15)+5;
+    const newUpgrade = {charge:money};
+    this.http.put("http://localhost:4000/consumer/" + this.userID,newUpgrade)
+      .subscribe((response) => {
+        console.log('okok');
+      });
+      
 
   }
   downgradeVM(vmID:string){
     this.http.get("http://localhost:4000/instance/downgrade/" + vmID)
+      .subscribe(() => {
+
+      });
+      this.http.get("http://localhost:8081/instance/downgrade/" + vmID)
       .subscribe(() => {
 
       });
@@ -148,7 +184,12 @@ console.log("Stop Request Sent!")
       }
     }
     this.usersUpdated.next([...this.InstanceCollections]);
-
+    var money = Math.floor(Math.random() * 15)+5;
+    const newUpgrade = {charge:money};
+    this.http.put("http://localhost:4000/consumer/" + this.userID,newUpgrade)
+      .subscribe((response) => {
+        console.log('okok');
+      });
 
   }
   getUserUpdateListener(){
