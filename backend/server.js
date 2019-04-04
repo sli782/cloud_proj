@@ -63,14 +63,14 @@ const port = process.env.PORT || 4000;
 const server = app.listen(port, function () {
     console.log('listening on port ' + port);
 });
-app.post("/consumer", (request, response) => {
+/*app.post("/instance", (request, response) => {
     ConsumerCollection.insert(request.body, (error, result) => {
         if(error) {
             return response.status(500).send(error);
         }
         response.send(result.result);
     });
-});
+});*/
 var VirtualMachineMap = { 'Basic Virtual Server Instance': '5c7746fb1c9d44000074bacf', 'Large Virtual Server Instance': '5c77482a1c9d44000074bad0', 'Ultra-Large Virtual Server Instance': '5c7748981c9d44000074bad1' };
 var VirtualMachineValueMap = { 'Basic Virtual Server Instance': 5, 'Large Virtual Server Instance': 10, 'Ultra-Large Virtual Server Instance': 15 };
 app.post("/instance", (request, response) => {
@@ -80,6 +80,7 @@ app.post("/instance", (request, response) => {
                 return response.status(500).send(error);
             }
             res()
+            response.send(result.result)
             // EventCollection.remove({})   keep sometime to remove all the documents in event collection, testing creating too many
         });
     })
@@ -112,6 +113,7 @@ app.post("/instance/start/:id", (request, response) => {
                 )
             }
             res()
+            response.send(result.result)
         })
 
     })
@@ -165,6 +167,7 @@ app.post("/instance/stop/:id", (request, response) => {
                 })
             })
             res();
+            response.send(result.result)
         })
     })
     promise.then(function (va) {
@@ -205,13 +208,13 @@ app.get("/instance/upgrade/:id", (request, response) => {
                 })
 
 
-                ConsumerCollection.findOne({ "_id": new ObjectId(result['user']) }, (err, res) => {
-                    var currentCharge = res['charge'] + AllMoney;
-                    ConsumerCollection.updateOne(
-                        { "_id": new ObjectId(result['user']) },
-                        { $set: { charge: currentCharge } }
-                    )
-                })
+                // ConsumerCollection.findOne({ "_id": new ObjectId(result['user']) }, (err, res) => {
+                //     var currentCharge = res['charge'] + AllMoney;
+                //     ConsumerCollection.updateOne(
+                //         { "_id": new ObjectId(result['user']) },
+                //         { $set: { charge: currentCharge } }
+                //     )
+                // })
 
 
             }
@@ -231,13 +234,13 @@ app.get("/instance/upgrade/:id", (request, response) => {
                 })
 
 
-                ConsumerCollection.findOne({ "_id": new ObjectId(result['user']) }, (err, res) => {
-                    var currentCharge = res['charge'] + AllMoney;
-                    ConsumerCollection.updateOne(
-                        { "_id": new ObjectId(result['user']) },
-                        { $set: { charge: currentCharge } }
-                    )
-                })
+                // ConsumerCollection.findOne({ "_id": new ObjectId(result['user']) }, (err, res) => {
+                //     var currentCharge = res['charge'] + AllMoney;
+                //     ConsumerCollection.updateOne(
+                //         { "_id": new ObjectId(result['user']) },
+                //         { $set: { charge: currentCharge } }
+                //     )
+                // })
 
 
             };
@@ -269,13 +272,13 @@ app.get("/instance/upgrade/:id", (request, response) => {
                 })
 
 
-                ConsumerCollection.findOne({ "_id": new ObjectId(result['user']) }, (err, res) => {
-                    var currentCharge = res['charge'] + AllMoney;
-                    ConsumerCollection.updateOne(
-                        { "_id": new ObjectId(result['user']) },
-                        { $set: { charge: currentCharge } }
-                    )
-                })
+                // ConsumerCollection.findOne({ "_id": new ObjectId(result['user']) }, (err, res) => {
+                //     var currentCharge = res['charge'] + AllMoney;
+                //     ConsumerCollection.updateOne(
+                //         { "_id": new ObjectId(result['user']) },
+                //         { $set: { charge: currentCharge } }
+                //     )
+                // })
             }
             else {
                 var promise = new Promise(function (res, rej) {
@@ -294,13 +297,13 @@ app.get("/instance/upgrade/:id", (request, response) => {
                 })
 
 
-                ConsumerCollection.findOne({ "_id": new ObjectId(result['user']) }, (err, res) => {
-                    var currentCharge = res['charge'] + AllMoney;
-                    ConsumerCollection.updateOne(
-                        { "_id": new ObjectId(result['user']) },
-                        { $set: { charge: currentCharge } }
-                    )
-                })
+                // ConsumerCollection.findOne({ "_id": new ObjectId(result['user']) }, (err, res) => {
+                //     var currentCharge = res['charge'] + AllMoney;
+                //     ConsumerCollection.updateOne(
+                //         { "_id": new ObjectId(result['user']) },
+                //         { $set: { charge: currentCharge } }
+                //     )
+                // })
             };
             EventCollection.insertOne({
                 VM: request.params.id,
@@ -329,13 +332,13 @@ app.get("/instance/upgrade/:id", (request, response) => {
                 })
 
 
-                ConsumerCollection.findOne({ "_id": new ObjectId(result['user']) }, (err, res) => {
-                    var currentCharge = res['charge'] + AllMoney;
-                    ConsumerCollection.updateOne(
-                        { "_id": new ObjectId(result['user']) },
-                        { $set: { charge: currentCharge } }
-                    )
-                })
+                // ConsumerCollection.findOne({ "_id": new ObjectId(result['user']) }, (err, res) => {
+                //     var currentCharge = res['charge'] + AllMoney;
+                //     ConsumerCollection.updateOne(
+                //         { "_id": new ObjectId(result['user']) },
+                //         { $set: { charge: currentCharge } }
+                //     )
+                // })
             }
             else {
                 var promise = new Promise(function(res,rej){
@@ -352,13 +355,13 @@ app.get("/instance/upgrade/:id", (request, response) => {
                         AllMoney = minuteDifference * VirtualMachineValueMap[result['configurationTemplate']];
                         res();
                     })
-                ConsumerCollection.findOne({ "_id": new ObjectId(result['user']) }, (err, res) => {
-                    var currentCharge = res['charge'] + AllMoney;
-                    ConsumerCollection.updateOne(
-                        { "_id": new ObjectId(result['user']) },
-                        { $set: { charge: currentCharge } }
-                    )
-                })
+                // ConsumerCollection.findOne({ "_id": new ObjectId(result['user']) }, (err, res) => {
+                //     var currentCharge = res['charge'] + AllMoney;
+                //     ConsumerCollection.updateOne(
+                //         { "_id": new ObjectId(result['user']) },
+                //         { $set: { charge: currentCharge } }
+                //     )
+                // })
 
             };
             EventCollection.insertOne({
@@ -410,13 +413,13 @@ app.get("/instance/downgrade/:id", (request, response) => {
                 EventType: "Downgrade",
                 EventTimeStamp: new Date()
             });
-            ConsumerCollection.findOne({ "_id": new ObjectId(result['user']) }, (err, res) => {
-                var currentCharge = res['charge'] + AllMoney;
-                ConsumerCollection.updateOne(
-                    { "_id": new ObjectId(result['user']) },
-                    { $set: { charge: currentCharge } }
-                )
-            })
+            // ConsumerCollection.findOne({ "_id": new ObjectId(result['user']) }, (err, res) => {
+            //     var currentCharge = res['charge'] + AllMoney;
+            //     ConsumerCollection.updateOne(
+            //         { "_id": new ObjectId(result['user']) },
+            //         { $set: { charge: currentCharge } }
+            //     )
+            // })
 
 
         }
@@ -453,13 +456,13 @@ app.get("/instance/downgrade/:id", (request, response) => {
                 EventType: "Downgrade",
                 EventTimeStamp: new Date()
             });
-            ConsumerCollection.findOne({ "_id": new ObjectId(result['user']) }, (err, res) => {
-                var currentCharge = res['charge'] + AllMoney;
-                ConsumerCollection.updateOne(
-                    { "_id": new ObjectId(result['user']) },
-                    { $set: { charge: currentCharge } }
-                )
-            })
+            // ConsumerCollection.findOne({ "_id": new ObjectId(result['user']) }, (err, res) => {
+            //     var currentCharge = res['charge'] + AllMoney;
+            //     ConsumerCollection.updateOne(
+            //         { "_id": new ObjectId(result['user']) },
+            //         { $set: { charge: currentCharge } }
+            //     )
+            // })
 
 
         }
@@ -496,13 +499,13 @@ app.get("/instance/downgrade/:id", (request, response) => {
                 EventType: "Downgrade",
                 EventTimeStamp: new Date()
             });
-            ConsumerCollection.findOne({ "_id": new ObjectId(result['user']) }, (err, res) => {
-                var currentCharge = res['charge'] + AllMoney;
-                ConsumerCollection.updateOne(
-                    { "_id": new ObjectId(result['user']) },
-                    { $set: { charge: currentCharge } }
-                )
-            })
+            // ConsumerCollection.findOne({ "_id": new ObjectId(result['user']) }, (err, res) => {
+            //     var currentCharge = res['charge'] + AllMoney;
+            //     ConsumerCollection.updateOne(
+            //         { "_id": new ObjectId(result['user']) },
+            //         { $set: { charge: currentCharge } }
+            //     )
+            // })
 
         }
     }
@@ -555,6 +558,14 @@ app.get("/template", (request, response) => {
         response.send(result);
     });
 });
+app.put("/consumer/:id", (request ,response) => {
+    ConsumerCollection.updateOne(
+        { "_id": new ObjectId(request.params.id) },
+        { $set: { charge: parseInt(request.body['charge'])} }
+    )
+    response.send(request.body['charge']);
+
+});
 app.get("/event", (request, response) => {
     EventCollection.find({}).toArray((error, result) => {
         if (error) {
@@ -581,3 +592,16 @@ app.get("/consumer/:id", (request, response) => {
         response.send(result);
     });
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
